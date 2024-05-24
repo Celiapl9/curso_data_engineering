@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_google_sheets__products
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          UUID for each unique product on platform.
+      - name: price
+        data_type: float                     
+        constraints:
+          - type: not_null
+        description: >
+          Name of the product.
+      - name: name
+        data_type: varchar
+        constraints:
+          - type: not_null
+        description: >
+          Price of the product.
+      - name: inventory
+        data_type: NUMBER                      
+        constraints:
+          - type: not_null
+        description: >
+          Amount of the inventory we have for this product.
+      - name: date_load
+        data_type: TIMESTAMP_TZ
+        constraints:
+          - type: not_null   
+        description: >
+          Date that the data was loaded.
+   
