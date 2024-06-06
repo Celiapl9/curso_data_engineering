@@ -1,17 +1,4 @@
-unit_tests:
-  - name: test1
-    description: "Check if email is valid"
-    model: users
-    given:
-      - input: ref('stg_sql_server_dbo__users')
-        rows:
-          - {email: ekollaschek2q@tuttocitta.it}
-          - {email: sdivers2p@msu.edu}
-          - {email: wheinecke2l@ebay.com}
-          - {email: fail_email}
-    expect:
-      rows:
-        - {email: ekollaschek2q@tuttocitta.it, is_valid_email_address: true}
-        - {email: sdivers2p@msu.edu, is_valid_email_address: true}
-        - {email: wheinecke2l@ebay.com, is_valid_email_address: true}
-        - {email: fail_email, is_valid_email_address: false}
+SELECT *
+FROM {{ ref('stg_sql_server_dbo__orders') }}
+WHERE delivery_date < order_placed_date
+/* comprueba si hay algún caso en el que la fecha de entrega sea anterior a la fecha en que se realizó el pedido, lo que no tendría sentido lógico e indicaría algún tipo de problema con los datos */

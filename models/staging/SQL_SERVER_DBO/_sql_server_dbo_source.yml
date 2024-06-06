@@ -61,7 +61,6 @@ sources:
           - name: PRODUCT_ID
           - name: PRICE
           - name: NAME
-          - name: (256)
           - name: INVENTORY
           - name: _FIVETRAN_DELETED
           - name: _FIVETRAN_SYNCED
