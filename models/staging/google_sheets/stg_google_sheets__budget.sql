@@ -1,17 +1,23 @@
-with 
+with src_budget
 
-source as (
+    as (
 
     select * from {{ source('google_sheets', 'budget') }}
 
 ),
 
-renamed as (
+renamed_casted as (
 
     select
+         _row,
+         product_id,
+        quantity,
+        month,
+        convert_timezone('UTC',_fivetran_synced) AS date_load
 
-    from source
+
+    from src_budget
 
 )
 
-select * from renamed
+select * from renamed_casted

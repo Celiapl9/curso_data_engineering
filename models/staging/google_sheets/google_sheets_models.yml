@@ -2,11 +2,14 @@ version: 2
 
 models:
   - name: google_sheets__budget
+    config:
+      contract:
+        enforced: false
     columns:
-      - name: mounth
+      - name: _row
         tests:
           - not_null
-        data_type: date
+        data_type: number
         constraints:
           - type: not_null
 
@@ -24,18 +27,19 @@ models:
         constraints:
           - type: not_null
 
-      - name: _fivetran_synced
+      - name: mounth
+        tests:
+          - not_null
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: date_load
         tests:
           - not_null
         data_type: Timestamp_TZ
         constraints:
           - type: not_null
 
-      - name: _row
-        tests:
-          - not_null
-        data_type: number
-        constraints:
-          - type: not_null
 
   

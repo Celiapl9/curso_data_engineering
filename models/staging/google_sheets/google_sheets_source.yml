@@ -6,6 +6,9 @@ sources:
     schema: google_sheets # this is the schema our raw data lives in
     database: ALUMNO10_DEV_BRONZE_DB # this is the name of our database
 
+    #database: "{{ env_var('DBT_ENVIRONMENTS') }}BRONZEDB" # this is the name of our database. REVISAR ESTO DE LA VARIABLE
+
+
     quoting:
       database: false
       schema: false
