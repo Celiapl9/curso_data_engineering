@@ -1,7 +1,9 @@
+
 version: 2
 
 sources:
-  - name: SQL_SERVER_DBO # name of the source
+
+  - name: SQL_SERVER_DBO # name of the source 
     schema: SQL_SERVER_DBO # this is the schema our raw data lives in
     database: ALUMNO10_DEV_BRONZE_DB # this is the name of our database
 
@@ -10,79 +12,136 @@ sources:
       schema: false
       identifier: false
 
+    # freshness:
+    #  warn_after: {count: 24, period: hour}
+    #   error_after: {count: 48, period: hour}
+
     tables:
+
       - name: addresses #el nombre de cada tabla
         loaded_at_field: _fivetran_synced #te indica la frescura del dato
         columns:
           - name: address_id
+            tests:
+              - unique
+              - not_null
           - name: zipcode
+            tests:
+              - not_null
           - name: country
           - name: address
           - name: state
           - name: _fivetran_deleted
           - name: _fivetran_synced
-      - name: events #el nombre de cada tabla
-        loaded_at_field: _fivetran_synced #te indica la frescura del dato
-        columns:
-          - name: EVENT_ID
-          - name: PAGE_URL
-          - name: EVENT_TYPE
-          - name: USER_ID
-          - name: PRODUCT_ID
-          - name: SESSION_ID
-          - name: CREATED_AT
-          - name: ORDER_ID
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
-      - name: orders #el nombre de cada tabla
+
+      - name: events
         loaded_at_field: _fivetran_synced
         columns:
-          - name: EVENT_ID
-          - name: PAGE_URL
-          - name: EVENT_TYPE
-          - name: USER_ID
-          - name: PRODUCT_ID
-          - name: SESSION_ID
-          - name: CREATED_AT
-          - name: ORDER_ID
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
-      - name: order_items #el nombre de cada tabla
+          - name: event_id
+            tests:
+              - unique
+              - not_null
+          - name: page_url
+            tests:
+              - not_null
+          - name: event_type
+            tests:
+              - not_null
+          - name: user_id
+            tests:
+              - not_null
+          - name: product_id
+          - name: session_id
+            tests:
+              - not_null
+          - name: created_at
+          - name: order_id
+          - name: _fivetran_deleted
+          - name: _fivetran_synced
+
+      - name: orders
         loaded_at_field: _fivetran_synced
         columns:
-          - name: ORDER_ID
-          - name: PRODUCT_ID
-          - name: QUANTITY
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
-      - name: products #el nombre de cada tabla
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+          - name: shipping_service
+          - name: shipping_cost
+          - name: address_id
+            tests:
+              - not_null
+          - name: created_at
+          - name: promo_id
+          - name: estimated_delivery_at
+          - name: order_cost
+          - name: user_id
+            tests:
+              - not_null
+          - name: order_total
+          - name: delivered_at
+          - name: tracking_id
+          - name: status
+          - name: _fivetran_deleted
+          - name: _fivetran_synced
+
+      - name: order_items
         loaded_at_field: _fivetran_synced
         columns:
-          - name: PRODUCT_ID
-          - name: PRICE
-          - name: NAME
-          - name: INVENTORY
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
-      - name: promos #el nombre de cada tabla
+          - name: order_id
+            tests:
+              - not_null
+          - name: product_id
+            tests:
+              - not_null
+          - name: quantity
+            tests:
+              - not_null
+          - name: _fivetran_deleted
+          - name: _fivetran_synced
+
+      - name: products
         loaded_at_field: _fivetran_synced
         columns:
-          - name: PROMO_ID
-          - name: DISCOUNT
-          - name: STATUS
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
-      - name: users #el nombre de cada tabla
+          - name: product_id
+            tests:
+              - unique
+              - not_null
+          - name: price
+          - name: name
+          - name: inventory
+          - name: _fivetran_deleted
+          - name: _fivetran_synced
+
+      - name: promos
         loaded_at_field: _fivetran_synced
         columns:
-          - name: USER_ID
-          - name: UPDATED_AT
-          - name: ADDRESS_ID
-          - name: LAST_NAME
-          - name: CREATED_AT
-          - name: PHONE_NUMBER
-          - name: TOTAL_ORDERS
-          - name: FIRST_NAME
-          - name: EMAIL
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
+          - name: promo_id
+            tests:
+              - unique
+              - not_null
+          - name: promo_name
+          - name: discount
+          - name: status
+          - name: _fivetran_deleted
+          - name: _fivetran_synced
+
+      - name: users
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: user_id
+            tests:
+              - unique
+              - not_null
+          - name: updated_at
+          - name: address_id
+            tests:
+              - not_null
+          - name: last_name
+          - name: created_at
+          - name: phone_number
+          - name: total_orders
+          - name: first_name
+          - name: email
+          - name: _fivetran_deleted
+          - name: _fivetran_synced

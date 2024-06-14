@@ -4,17 +4,17 @@
   )
 }}
 
+with 
 
+source as (
 
-WITH src_events AS (
-    SELECT * 
-    FROM {{ source('sql_server_dbo', 'events') }}
-    ),
+    select * from {{ source('SQL_SERVER_DBO', 'events') }}
 
-renamed_casted AS (
-    SELECT
-         
+),
 
+renamed as (
+
+    select
         event_id,
         page_url,
         event_type,
@@ -26,9 +26,7 @@ renamed_casted AS (
         _fivetran_deleted,
         {{ to_utc('_fivetran_synced') }} as _fivetran_synced_utc
 
+    from source
+)
 
-
-    FROM src_events
-    )
-
-SELECT * FROM renamed_casted
+select * from renamed
