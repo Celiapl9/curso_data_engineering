@@ -1,8 +1,14 @@
+{{
+  config(
+    materialized='view'
+  )
+}}
+
 with 
 
 source as (
 
-    select * from {{ source('SQL_SERVER_DBO', 'promos') }}
+    select * from {{ ref('base_SQL_SERVER_DBO__promos') }}
 
 ),
 
@@ -10,25 +16,21 @@ renamed as (
 
     select
         promo_id,
-        discount as DISCOUNT_EUROS,
-        status,
+        promo_name,
+        discount_dollar,
+        IFF(promo_status = 'active', '1', '0')::number(2,0) as promo_status_id,
         _fivetran_deleted,
-        _fivetran_synced AS _fivetran_synced_utc
+        _fivetran_synced_utc
 
     from source
-
-    UNION ALL
+    union all
     select
-        md5(PROMO_ID) as PROMO_ID_HASHED,  -- Aquí aplicamos la función hash
-        DISCOUNT as DISCOUNT_EUROS,
-        case 
-            when STATUS = '1' then 'active'
-            else 'inactive'
-        end as STATUS,  -- Transformamos el campo STATUS(preguntar lo del valor 10)
-        _FIVETRAN_DELETED,
-        _FIVETRAN_SYNCED AS _fivetran_synced_utc
-    from source
-    
+        md5('sin_promo')
+        ,'sin_promo'
+        ,0
+        ,0
+        ,null
+        ,null
 )
 
 select * from renamed

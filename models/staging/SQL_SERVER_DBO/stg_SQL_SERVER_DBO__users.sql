@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized='view'
+  )
+}}
+
 with 
 
 source as (
@@ -10,19 +16,34 @@ renamed as (
 
     select
         user_id,
-        updated_at,
         address_id,
-        last_name,
-        created_at,
-        phone_number,
-        total_orders,
         first_name,
+        last_name,
+        phone_number,
         email,
+        coalesce (regexp_like(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')= true,false) as is_valid_email_address,
+        {{ to_utc('updated_at') }} as updated_at_utc,
+        {{ to_utc('created_at') }} as created_at_utc,
+        total_orders,
         _fivetran_deleted,
-        _fivetran_synced
+        {{ to_utc('_fivetran_synced') }} as _fivetran_synced_utc
 
     from source
-
+    union all
+    select
+        md5('sin_user'),
+        md5('sin_address'),
+        'No existe',
+        'No existe',
+        '0',
+        'No_existe',
+        coalesce (regexp_like('No_existe', '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')= true,false) as is_valid_email_address,
+        NULL,
+        '2024-05-31',
+        0,
+        null,
+        null
+  
 )
 
 select * from renamed
