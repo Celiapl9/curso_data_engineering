@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized='view'
+  )
+}}
+
 with 
 
 source as (
@@ -11,9 +17,9 @@ renamed as (
     select
         order_id,
         product_id,
-        quantity,
+        quantity as quantity_of_products,
         _fivetran_deleted,
-        _fivetran_synced
+        {{ to_utc('_fivetran_synced') }} as _fivetran_synced_utc
 
     from source
 

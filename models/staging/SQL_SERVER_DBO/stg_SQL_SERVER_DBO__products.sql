@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized='view'
+  )
+}}
+
 with 
 
 source as (
@@ -8,24 +14,23 @@ source as (
 
 renamed as (
 
-        select
-            product_id,
-            price as price_euro,
-            name,
-            inventory,
-            _fivetran_deleted,
-            CONVERT_TIMEZONE('UTC', TO_TIMESTAMP_TZ(_fivetran_synced)) as _fivetran_synced_utc--convertir la zona horaria
-        from source
-        union all
-        select
-            md5('sin_producto'),
-            0,
-            'No existente',
-            0,
-            null,
-            null
-    )
+    select
+        product_id,
+        price as price_dollar,
+        name,
+        inventory,
+        _fivetran_deleted,
+        {{ to_utc('_fivetran_synced') }} as _fivetran_synced_utc
 
-    select * from renamed
+    from source
+    union all
+    select
+        md5('sin_producto'),
+        0,
+        'No existente',
+        0,
+        null,
+        null
+)
 
-
+select * from renamed
